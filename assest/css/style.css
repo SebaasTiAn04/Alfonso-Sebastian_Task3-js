@@ -1,0 +1,242 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 100%;
+
+}
+
+.container{
+    width: 50rem;
+    transition: 0.9s;
+}
+
+.container>div{
+    transition: 0.9s;
+}
+
+.width{
+    width: 30rem;
+}
+
+#checkboxs{
+    width: 50%;
+}
+header{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: rgb(251, 252, 225);
+}
+main{
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 54rem;
+}
+nav{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 50%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+nav>a:hover{
+    background-color: rgb(218, 216, 216);
+    color: black;
+    transition: 0.4s;
+}
+
+nav>a{
+    text-align: center;
+    text-decoration: none;
+    background-color: rgb(255, 255, 255);
+    margin: .5rem;
+    border: 1px solid black;
+    padding: .8rem;
+    color: black;
+    transition: 0.4s;
+}
+
+header>img{
+    width: 200px;
+    padding: 2rem;
+}
+
+main{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 2rem;
+}
+
+main>h2{
+    width: 100%;
+    padding: 2rem;
+    text-align: center;
+    background-color: rgb(241, 253, 255);
+}
+
+.formulario{
+    width: 100%;
+    margin: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.chec{
+    width: 53%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.busqueda{
+    width: 30em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end !important; 
+}
+
+.div-card{
+    gap: 1rem;
+    min-height: 63.5vh;
+}
+
+.card{
+    margin: 1rem;
+    transition: 0.4s;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.card:hover{
+    transition: 0.4s;
+    transform: scale(1.1);
+}
+
+main>div{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+}
+
+footer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: rgb(251, 252, 225);
+}
+
+footer>h3{
+    margin: 2rem;
+}
+
+.redes{
+    margin: 2rem;
+    width: 10rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+td, th {
+    border: black 1px solid;
+    padding: .5rem;
+}
+
+th{
+    background-color: rgb(196, 194, 194);
+}
+
+.filtro{
+    display: none;
+}
+
+
+@media (min-width: 320px){
+
+    header{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        align-items: center;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        background-color: rgb(251, 252, 225);
+    }
+    
+
+    .busqueda{
+        width: 15em;
+    }
+
+    
+    .width{
+        width: 20rem;
+    }
+
+    .contact{
+        width: 100%;
+    }
+
+}
+
+@media (min-width: 700px){
+
+    .width{
+        width: 25rem;
+    }
+
+    .contact{
+        width: 80%;
+    }
+
+
+}
+
+@media (min-width: 1280px){
+
+    .busqueda{
+        width: 25em;
+    }
+    .width{
+        width: 30rem;
+    }
+
+    .contact{
+        width: 70%;
+    }
+
+
+}
+
+@media (min-width: 1580px){
+
+    .busqueda{
+        width: 30em;
+    }
+
+    header{
+        justify-content: space-between;
+    }
+
+    .contact{
+        width:50%;
+    }
+
+}
+
+
