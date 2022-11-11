@@ -109,7 +109,7 @@ $buscador.addEventListener("keyup", e=>{
     }else{
         $container.innerHTML =  ` <h2 class="text-bg-danger col-12 text-center">NO HAY RESULTADO</h2> `
     }
-     
+
 })
 
 
