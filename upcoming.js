@@ -1,19 +1,59 @@
 const $container = document.querySelector('.containerEvents')
 const $check = document.getElementById('checkboxs')
 const $buscador = document.getElementById('buscador')
-const datos = eventos.events;
-const currentDate = eventos.currentDate;
 
-
-const fn = (events) => events.category;
-
-const eventosFiltrados = datos.filter(fn);
-const evento = eventosFiltrados.map(fn);
-const eventosSinRepetir = new Set(evento);
-const arrayEventosSinRepetir = Array.from(eventosSinRepetir);
-console.log(arrayEventosSinRepetir);
+let datos ;
+let currentDate;
+let eventos;
+let fn;
+let eventosFiltrados;
+let evento;
+let eventosSinRepetir;
+let arrayEventosSinRepetir;
 
  
+fetch("https://amazing-events.herokuapp.com/api/events")
+    .then((response) => response.json())
+    .then((json) => {
+        datos = json;
+        eventos = datos.events;
+        currentDate = datos.currentDate;
+        fn = (eventos) => eventos.category;
+        eventosFiltrados = eventos.filter(fn);
+        evento = eventosFiltrados.map(fn);
+        eventosSinRepetir = new Set(evento);
+        arrayEventosSinRepetir = Array.from(eventosSinRepetir);
+        createCheckboxs(arrayEventosSinRepetir, $check);
+        imprimirEventos(eventosFiltrados, $container);
+        app();
+    }).catch((exception) => console.log(exception)); 
+
+    function app(){
+       
+        $check.addEventListener('change', (event) =>{
+    
+            if(eventCheck().length === 0){
+                $container.innerHTML = '<h2> Seleccione un evento </h2>'
+                return
+           } 
+           const eventosCheck = filtrarEventos(eventosFiltrados, eventCheck());
+           eventosCheck.length !== 0 ? imprimirEventos(eventosCheck, $container)
+           : $container.innerHTML = '<h2> no hay eventos </h2>';
+        })
+        
+        $buscador.addEventListener("keyup", e=>{
+            //filtro por titulo
+            const eventosFiltrado = buscarTitulo(filtrarEventos(eventos, eventCheck()))
+            //filtro evento por categoria
+           if(eventosFiltrado.length != 0){
+               imprimirEventos(eventosFiltrado, $container);
+           }else{
+               $container.innerHTML =  ` <h2 class="text-bg-danger col-12 text-center">NO HAY RESULTADO</h2> `
+           }
+       
+       })
+    }
+    
   function createCheckboxs(values, container){
     let template = '';
     values.forEach(element => template += `
@@ -25,8 +65,6 @@ console.log(arrayEventosSinRepetir);
     )
     container.innerHTML = template;
  }
-
-createCheckboxs(arrayEventosSinRepetir, $check);
 
 function createCard(dato){
     let div = document.createElement('div');
@@ -62,23 +100,10 @@ function imprimirEventos(eventos, contenedor){
     contenedor.appendChild(fragment);
 }
 
-imprimirEventos(eventosFiltrados, $container);
-
 function eventCheck(){
     const checkedFiltrado = Array.from(document.querySelectorAll(" input[type='checkbox']:checked")).map(input => input.value)
     return checkedFiltrado;
 }
-
-$check.addEventListener('change', (event) =>{
-    if(eventCheck().length === 0){
-    $container.innerHTML = '<h2> Seleccione un evento </h2>'
-    return
-   } 
-   const eventos = filtrarEventos(eventosFiltrados, eventCheck());
-   eventos.length !== 0 ? imprimirEventos(eventos, $container)
-   : $container.innerHTML = '<h2> no hay eventos </h2>';
-})
-
 
 function filtrarEventos(datos , eventosSeleccionados){
     const fn = evento => eventosSeleccionados.includes(evento.category);
@@ -102,16 +127,3 @@ function buscarCategoria(categoria, evenCategoria){
 
     return array;
 }
-
-$buscador.addEventListener("keyup", e=>{
-     //filtro por titulo
-     const eventosFiltrado = buscarTitulo(filtrarEventos(datos, eventCheck()))
-     //filtro evento por categoria
-/*      const eventosFiltrado = eventos.filter(buscarCategoria(eventos, eventCheck())) */
-    if(eventosFiltrado.length != 0){
-        imprimirEventos(eventosFiltrado, $container);
-    }else{
-        $container.innerHTML =  ` <h2 class="text-bg-danger col-12 text-center">NO HAY RESULTADO</h2> `
-    }
-     
-})

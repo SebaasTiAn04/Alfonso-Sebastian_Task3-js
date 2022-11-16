@@ -219,8 +219,6 @@ th{
     .contact{
         width: 70%;
     }
-
-
 }
 
 @media (min-width: 1580px){
@@ -236,6 +234,7 @@ th{
     .contact{
         width:50%;
     }
+
 
 }
 
