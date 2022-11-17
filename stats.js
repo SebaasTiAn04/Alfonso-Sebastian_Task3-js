@@ -1,303 +1,117 @@
-const $main = document.querySelector("main");
-const $containerTable = document.getElementById("contact")
+const { createApp } = Vue
 
+createApp({
+    data(){
+        return{
+            url: "https://amazing-events.herokuapp.com/api/events",
+            eventos:[],
 
-let eventos = [];
-let currentDate;
-let eventosGananciasCalculadasFuturas = [];
-let eventosGananciasCalculadasPasadas = [];
-   
-let fn;
-let eventosFiltrados;
-let evento;
-let eventosSinRepetir;
-let arrayEventosSinRepetir;
+            eventosFuturos:[],
+            eventosPasados:[],
 
-let eventosPasados = [];
-let eventosFuturosPorCategoria = [];
-let eventosPasadosPorCategoria = [];
-let eventoConMasAssistencia;
-let eventoConMasAforo;
-let eventoConMenosAssistencia;
-let fragment = new DocumentFragment;
+            eventosFuturosCategoria:[],
+            eventosPasadosCategoria:[],
+            categorias:[],
+            categoriasSeleccionadas:[],
 
-function imprimirEventos(){
-    let aux = document.createElement("table");
-    aux.classList.add('col-12')
-    aux.innerHTML = `<thead>
-                            <tr>
-                                <th colspan="3">Events statistics</th>
-                            </tr>
-                            </thead>
-                             <tbody>
-                             <tr>
-                                 <td>Events with the highest percentage of attendance</td>
-                                 <td>Event with larger capadity</td>
-                                 <td>Events with the lowest percentage of attendace</td>
-                            </tr>
-                                            <tr>
-                                                <td>${eventoConMasAssistencia.name}</td>
-                                                <td>${eventoConMasAforo.name}</td>
-                                                <td>${eventoConMenosAssistencia.name}</td>
-                                            </tr>
-                                        </tbody>`
-    
-                                    
-    $containerTable.appendChild(aux);
-}
-    
-function imprimirEventosFuturos(){
-    let aux = document.createElement("table");
-    aux.classList.add('col-12');
-    aux.innerHTML =`  <thead>
-                        <tr>
-                            <th colspan="3">Upcoming events statistics by category</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th>Categories</th>
-                            <th>Revenues</th>
-                            <th>Percentage of attendance</th>
-                    </tr>
-                    </tbody>
-                                    
-                     `             
-                     eventosFuturosPorCategoriasCalculadas.forEach(elemento => imiprimircategoriasFuturas(elemento)) 
-                     
-                     aux.appendChild(fragment);   
-                    
-                     
-    $containerTable.appendChild(aux);
-}
-
- 
-function imprimirEventosPasados(){
-    let aux = document.createElement("table");
-    aux.classList.add('col-12');
-    aux.innerHTML =`  <thead>
-                        <tr>
-                            <th colspan="3">Past events statistics by category</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th>Categories</th>
-                            <th>Revenues</th>
-                            <th>Percentage of attendance</th>
-                    </tr>
-                    </tbody>
-                                    
-                     `             
-                     eventosPasadosPorCategoriasCalculadas.forEach(elemento => imiprimircategoriasPasadas(elemento)) 
-                     
-                     aux.appendChild(fragment);   
-                    
-                     
-    $containerTable.appendChild(aux);
-}
-
-function imiprimircategoriasPasadas(elemento){
-    let aux = document.createElement("tr");
-    aux.innerHTML = `
-                      <td>${elemento.category}</td>       
-                      <td>$  ${elemento.revenus}</td> 
-                      <td>${Math.round(elemento.assistance*100/elemento.capacity)}%</td> 
-                    ` 
-   fragment.appendChild(aux);          
-}
-
-
-
-function imiprimircategoriasFuturas(elemento){
-     let aux = document.createElement("tr");
-     aux.innerHTML = `
-                       <td>${elemento.category}</td>       
-                       <td>$  ${elemento.revenus}</td> 
-                       <td>${Math.round(elemento.estimate*100/elemento.capacity)}%</td> 
-                     ` 
-    
-    fragment.appendChild(aux);          
-}
-
-function imiprimirIngresosFuturosPorCategoria(elemento){
-
-    let aux = document.createElement("tr");
-    aux.innerHTML = `
-                      <td>${elemento}</td>       
-                    ` 
-   fragment.appendChild(aux);          
-}
-
-function calcularGanancias(evento){
-
-    if(evento.estimate){
-        eventosGananciasCalculadasFuturas.push(
-            {
-                category: evento.category,
-                ganancia : evento.price * evento.estimate,
-                capacidad: evento.capacity,
-                date: evento.date,
-                estimate: evento.estimate,
-            }
-            )
-    }else{
-        eventosGananciasCalculadasPasadas.push(
-            {
-                category: evento.category,
-                ganancia : evento.price * evento.assistance,
-                capacidad: evento.capacity,
-                date: evento.date,
-                assistance: evento.assistance,
-            }
-        )
-    }
-    
-}
-
-fetch("https://amazing-events.herokuapp.com/api/events")
-    .then((response) => response.json())
-    .then((json) => {
-        datos = json;
-        eventos = datos.events;
-        currentDate = datos.currentDate;
-        eventosPas(currentDate);
-
-        //Primera columna
-        eventoConMasAssistencia = eventoMaxAsistencia(eventosPasados);
-        eventoConMasAforo = eventoMaxAforo(eventosPasados);
-        eventoConMenosAssistencia = eventoMinAsistencia(eventosPasados);
-
-        eventosFut(currentDate);
-        console.log(categoriasPasados(currentDate));
-        //segunda Columna
+            arrayCategoriasPasadas: [],
+            arrayCategoriasFuturas: [],
+            mayorAsistencia: [],
+            menorAsistencia: [],
+            mayorCapacidad: []
+            
+        }
+    },
+    created(){
+        this.loadData()
         
-        //calcular ganancias
-        eventos.forEach(evento => calcularGanancias(evento))
-        calcularGananciasFuturas(eventosGananciasCalculadasFuturas);
-        calcularGananciasPasadas(eventosGananciasCalculadasPasadas);
+    },
+    mounted(){
         
-        //imprimir
-        imprimirEventos();
-        imprimirEventosFuturos();
-        imprimirEventosPasados();
-        
-    }).catch((exception) => console.log(exception));
+    },
+    methods: {
+        loadData(){
+        fetch(this.url).then(response => response.json())
+            .then(data => {
+                this.eventos = data.events
+                this.eventosFuturos =  this.eventos.filter(evento => (evento.date >= data.currentDate) )
+                this.eventosPasados = this.eventos.filter(evento => (evento.date < data.currentDate) )
+               
+
+                const fn = evento => evento.category
+                this.eventosFuturosCategoria = Array.from(
+                    new Set (this.eventosFuturos.map(fn)))
+
+                this.eventosPasadosCategoria = Array.from(
+                    new Set (this.eventosPasados.map(fn)))   
+
+                    const asistencia = this.eventosAsistencia(this.eventosPasados);
+                    const capacidad = this.eventosCapacidad(this.eventosPasados);
+                    this.mayorAsistencia = asistencia[0];
+                    this.menorAsistencia = asistencia[asistencia.length - 1];
+                    this.mayorCapacidad = capacidad[0];
     
-    let eventosFuturosPorCategoriasCalculadas = [];
+                    this.arrayCategoriasPasadas = this.gananciasPasadas(this.eventosPasadosCategoria, this.eventosPasados)
+    
+                    this.arrayCategoriasFuturas = this.gananciasFuturas(this.eventosFuturosCategoria, this.eventosFuturos)
+            })
+            .catch( exception => console.log(exception) )
+        },
 
+        eventosAsistencia(array) {
+            return array.map(events => events).sort((b, a) => (((a.assistance * 100) / a.capacity) - ((b.assistance * 100) / b.capacity)))
+        },
+        eventosCapacidad(array) {
+            return array.map(events => events).sort((b, a) => (a.capacity - b.capacity));
+        },
 
+        
+        gananciasPasadas(categoria, evento){
+            let array = []
+            categoria.forEach(elemento => {
+                const eventosIguales = evento.filter( evento => evento.category === elemento)            
+                const ganancias = eventosIguales.map(evento => (evento.assistance * evento.price)).reduce((a, b)=> a + b)
+    
+                const asistencia = eventosIguales.map(evento => (evento.assistance * 100 ) / evento.capacity)
+                const sumaAsistencia = asistencia.reduce((a, b) => a + b) / asistencia.length 
+        
+                const datos = {
+                    nombre: elemento,
+                    ganancia: ganancias,
+                    porcentaje: sumaAsistencia.toFixed(2)
 
-    function calcularGananciasFuturas(array){
-        eventosFuturosPorCategoria.map(evento => {
-            eventosFuturosPorCategoriasCalculadas.push(
-                {
-                    category: evento,
-                    revenus : array.filter(elemento => evento == elemento.category).map(e => e.ganancia).reduce((a,b) => a+=b),
-                    estimate : array.filter(elemento => evento == elemento.category).map(e => e.estimate).reduce((a,b) => a+=b),
-                    capacity : array.filter(elemento => evento == elemento.category).map(e => e.capacidad).reduce((a,b) => a+=b)
                 }
-            )
-        })
-    }
-    
-    let eventosPasadosPorCategoriasCalculadas = [];
+                array.push(datos)
+            });
+            return array
+        },
+        gananciasFuturas( categoria, evento ){
+            let array = []
+            categoria.forEach(elemento => {
 
-    function calcularGananciasPasadas(array){
-        eventosPasadosPorCategoria.map(evento => {
-            eventosPasadosPorCategoriasCalculadas.push(
-                {
-                    category: evento,
-                    revenus : array.filter(elemento => evento == elemento.category).map(e => e.ganancia).reduce((a,b) => a+=b),
-                    assistance : array.filter(elemento => evento == elemento.category).map(e => e.assistance).reduce((a,b) => a+=b),
-                    capacity : array.filter(elemento => evento == elemento.category).map(e => e.capacidad).reduce((a,b) => a+=b)
+                const eventosIguales = evento.filter( evento => evento.category === elemento)
+                
+                const ganancias = eventosIguales.map(evento => (evento.estimate * evento.price)).reduce((a, b)=> a + b)
+        
+        
+        
+                const asistencia = eventosIguales.map(evento => (evento.estimate * 100 ) / evento.capacity)
+                const sumaAsistencia = asistencia.reduce((a, b) => a + b) / asistencia.length 
+        
+                const datos = {
+                    nombre: elemento,
+                    ganancia: ganancias,
+                    porcentaje: sumaAsistencia.toFixed(2)
+
                 }
-            )
-        })
-    }
+                array.push(datos)
+            });
+            return array
+        },
+        
+    },
 
-    function eventoMaxAsistencia(evenPast){
-        let max = Number.MIN_SAFE_INTEGER;
-        let cant;
-        let even;
-        for(evento of evenPast){
-            
-            cant = parseInt((evento.assistance/ evento.capacity)*100);
-            if(cant > max){
-                max = cant;
-                even = evento;
-            }
-        }
-        return even;
-    }
-
-    function eventoMinAsistencia(evenPast){
-        let max = Number.MAX_SAFE_INTEGER;
-        let cant;
-        let even;
-        for(evento of evenPast){
-            
-            cant = parseInt((evento.assistance/ evento.capacity)*100);
-            if(cant < max){
-                max = cant;
-                even = evento;
-            }
-        }
-        return even;
-    }
-
-    function eventoMaxAforo(evenPast){
-        let max = Number.MIN_SAFE_INTEGER;
-        let cant;
-        let even;
-        for(evento of evenPast){
-            
-            cant = parseInt(evento.capacity);
-            if(cant > max){
-                max = cant;
-                even = evento;
-            }
-        }
-        return even;
-    }
-
-    function eventosPas(Date){
-        for(evento of eventos){
-            if(evento.date < Date){
-                eventosPasados.push(evento)
-            }
-        }
-        return eventosPasados;
-    }
-
-    function eventosFut(Date){
-        let eventosParaFiltrar = [];
-        for(evento of eventos){
-            if(evento.date > Date){
-                eventosParaFiltrar.push(evento)
-            }
-        }
-        fn = (eventosParaFiltrar) => eventosParaFiltrar.category;
-        eventosFiltrados = eventosParaFiltrar.filter(fn);
-        evento = eventosFiltrados.map(fn);
-        eventosSinRepetir = new Set(evento);
-        arrayEventosSinRepetir = Array.from(eventosSinRepetir);
-        eventosFuturosPorCategoria = arrayEventosSinRepetir
-        return eventosFuturosPorCategoria;
-    }
-
-    function categoriasPasados(Date){
-        let eventosParaFiltrar = [];
-        for(evento of eventos){
-            if(evento.date < Date){
-                eventosParaFiltrar.push(evento)
-            }
-        }
-        fn = (eventosParaFiltrar) => eventosParaFiltrar.category;
-        eventosFiltrados = eventosParaFiltrar.filter(fn);
-        evento = eventosFiltrados.map(fn);
-        eventosSinRepetir = new Set(evento);
-        arrayEventosSinRepetir = Array.from(eventosSinRepetir);
-        return eventosPasadosPorCategoria = arrayEventosSinRepetir;
-    }
     
+    computed: {
+    }
+}).mount('#app')

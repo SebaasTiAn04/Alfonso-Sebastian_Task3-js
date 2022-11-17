@@ -10,6 +10,7 @@
     <title>Asevents_Stats</title>
 </head>
 <body>
+    <div id="app" class="col-12">
     <header>
         <img src="./assest/img/Logo-Amazing-Events.png" alt="Logo">
         <nav>
@@ -24,7 +25,66 @@
     <main class="container-fluid d-flex justify-content-center  align-items-center flex-column">
         <h2>Stats</h2>
         <div id="contact" class="col-6">
-        
+            <div >
+                <table class="col-12">
+                    <thead>
+                        <tr>
+                            <th class="th-container" colspan="3">Events Statistics</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Events with the highest percentage of attendance</th>
+                            <th>Event with larger capacity</th>
+                            <th>Events with the lowest percentage of attendace</th>
+                        </tr>
+                        <tr>
+                            <td>{{mayorAsistencia.name}}</td>
+                            <td>{{mayorCapacidad.name}}</td>
+                            <td>{{menorAsistencia.name}}</td>
+                        </tr>
+                    </tbody>
+            
+                </table>
+                <table class="col-12">
+                    <thead>
+                        <tr>
+                            <th colspan="3">Upcomings Events Statistics by Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <th>Categories</th>
+                                <th>Revenues</th>
+                                <th>Percentage of attendance</th>
+                            </tr>  
+                            <tr v-for="elemento of arrayCategoriasFuturas">
+                                <td>{{elemento.nombre}}</td>
+                                <td>${{elemento.ganancia}}</td>
+                                <td>{{elemento.porcentaje}}%</td>
+                            </tr>
+                    </tbody>
+                </table>
+                <table class="col-12">
+                    <thead class="thead-container">
+                        <tr>
+                            <th colspan="3">Past Events Statistics by Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <th>Categories</th>
+                                <th>Revenues</th>
+                                <th>Percentage of attendance</th>
+                           </tr>  
+                        <tr v-for=" elemento of arrayCategoriasPasadas">
+                            <td> {{elemento.nombre}}</td>
+                            <td> $ {{elemento.ganancia}}</td>
+                            <td> {{elemento.porcentaje}}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
     <footer>
@@ -42,8 +102,9 @@
         
         <H3>COHORT</H3>
     </footer>
-
+</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="./stats.js"></script>
 </body>
 </html>

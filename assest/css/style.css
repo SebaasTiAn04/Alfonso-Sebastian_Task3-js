@@ -9,6 +9,10 @@ body{
 
 }
 
+.sear{
+    width: 30em !important;
+}
+
 .container{
     width: 50rem;
     transition: 0.9s;
@@ -86,7 +90,6 @@ main>h2{
 }
 
 .formulario{
-    width: 100%;
     margin: 2rem;
     display: flex;
     flex-wrap: wrap;
@@ -192,6 +195,10 @@ th{
         width: 100%;
     }
 
+    .form{
+        width: 100%;
+    }
+
 }
 
 @media (min-width: 700px){
@@ -203,7 +210,9 @@ th{
     .contact{
         width: 80%;
     }
-
+    .form{
+        width: 80%;
+    }
 
 }
 
@@ -217,6 +226,10 @@ th{
     }
 
     .contact{
+        width: 70%;
+    }
+
+    .form{
         width: 70%;
     }
 }
@@ -233,6 +246,10 @@ th{
 
     .contact{
         width:50%;
+    }
+
+    .form{
+        width: 50%;
     }
 
 
